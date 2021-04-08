@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timer</title>
+    <style>
+body {
+    background-color: black;
+    text-align: center;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color: white;
+}
+
+input[type='number'] {
+    font-size: 2vw;
+}
+
+.formulario, .controles {
+    font-size: 2vw;
+    margin: 10px;
+}
+
+.botao {
+    cursor: pointer;
+    display: inline-block;
+    color: white;
+    border-radius: 10px;
+    border-width: 0px;
+    margin: auto 10px;
+    padding: 10px;
+}
+
+.botao span {
+    display: block;
+}
+
+.clicado {
+    transform: scale(0.9);
+    background-color: #003a77 !important;
+}
+
+.textoBotao {
+    color: lightgray;
+    font-size: 1vw;
+}
+
+#iniciar {
+    background-color: #28a745;
+}
+
+#pausar {
+    background-color: #007bff;
+}
+
+#zerar {
+    background-color: #dc3545;
+}
+
+#tempo {
+    border: 3px orange dashed;
+    margin: 20px;
+    color: aqua;
+    font-size: 30vw;
+    line-height: 30vw;
+}
+    </style>
+</head>
+<body>
+    <div>
+        <div class="formulario">
+            <label for="tempoDigitado">Tempo:</label>
+            <input type="number" id="tempoDigitado" maxlength="2" min="1" max="99" autofocus value="1" />
+            Minuto(s)
+        </div>
+        <div class="controles">
+            <div class="botao" id="iniciar" onclick="iniciaTimer()">
+                <span class="simboloBotao">&#x23F5; Iniciar</span>
+                <span class="textoBotao">Enter</span>
+            </div>
+            <div class="botao" id="pausar" onclick="pausaTimer()">
+                <span class="simboloBotao">&#x23F8; Pausar</span>
+                <span class="textoBotao">Espaço</span>
+            </div>
+            <div class="botao" id="zerar" onclick="zeraTimer()">
+                <span class="simboloBotao">&#x23F9; Zerar</span>
+                <span class="textoBotao">Esc</span>
+            </div>
+        </div>
+    </div>
+    <div id="tempo">00:00</div>
+    <script>
+var tempo = 0;
+var timer = undefined;
+ 
+function iniciaTimer() {
+    tempo = document.getElementById('tempoDigitado').value * 60 + 1;
+    timer = clearInterval(timer);
+    timer = setInterval(executaTimer, 1000);
+}
+
+function pausaTimer() {
+    if (tempo > 0) {
+        document.getElementById("pausar").classList.toggle('clicado');
+
+        if (typeof timer === 'undefined') {
+            timer = setInterval(executaTimer, 1000);
+        }
+        else {
+            timer = clearInterval(timer);
+        }
+    }
+}
+
+function zeraTimer() {
+    tempo = 0;
+    executaTimer();
+    document.getElementById('tempoDigitado').focus();
+}
+
+function executaTimer() {
+    if (tempo > 0) {
+        tempo--;
+    }
+    else if (tempo == 0) {
+        timer = clearInterval(timer);
+    }
+
+    var minutos = '0' + Math.trunc(tempo / 60);
+    var segundos = '0' + tempo % 60;
+
+    document.getElementById("tempo").innerText = minutos.slice(-2) + ':' + segundos.slice(-2);
+}
+
+document.onkeydown = function(evt) {
+    evt = evt || window.event;
+    if (evt.key == 'Escape') {
+        zeraTimer();
+    }
+    if (evt.key == 'Enter') {
+        iniciaTimer();
+    }
+    if (evt.key === " ") {
+        pausaTimer();
+    }
+
+};
+    </script>
+</body>
+</html>
